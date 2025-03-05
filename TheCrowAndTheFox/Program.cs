@@ -21,25 +21,25 @@ namespace TheCrowAndTheFox
 
 		protected override void KeyDown(KeyEventArgs e)
 		{
-			if (e.KeyCode == Keys.Escape)
-				Exit();
+			_game.PlayerControl(e);
+		}
 
+		protected override void KeyUp(KeyEventArgs e)
+		{
 			_game.PlayerControl(e);
 		}
 
 		protected override void Update(DemoTime time)
 		{
 			_game.Update();
-			Timr.DeltaTime = FrameDelta;
-			
+			Timer.DeltaTime = FrameDelta;
 		}
 
 		protected override void Draw(DemoTime time)
 		{
 			_game.Render(RenderTarget2D);
+			PrintScore(_game.Score);
 		}
-
-
 
 		[STAThread]
 		static void Main()
@@ -48,7 +48,7 @@ namespace TheCrowAndTheFox
 			Application.SetCompatibleTextRenderingDefault(false);
 			//Application.Run(new MainForm());
 			Program program = new Program();
-			program.Run(new DemoConfiguration("SharpDX DirectWrite Simple HelloWorld Demo"));
+			program.Run(new DemoConfiguration("The Crow and The Fox"));
 		}
 	}
 }

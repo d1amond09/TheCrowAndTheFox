@@ -15,7 +15,9 @@ namespace TheCrowAndTheFox
 {
 	public class Game
 	{
-		private RenderTarget _renderTarget2D;
+		public int Score { get; set; }
+		public int BestScore { get; set; }
+
 		private Player _player;
 		private Background _background;
 		private List<GameObject> _gameObjects;
@@ -75,9 +77,8 @@ namespace TheCrowAndTheFox
 
 		public Game(RenderTarget renderTarget2D)
 		{
-			_renderTarget2D = renderTarget2D;
-			_player = new Player(renderTarget2D);
-			_background = new Background(renderTarget2D);
+			_player = new Player();
+			_background = new Background();
 			_gameObjects = new List<GameObject> { _background, _player };
 			_random = new Random();
 			SpawnObject();
@@ -85,44 +86,48 @@ namespace TheCrowAndTheFox
 
 		private void SpawnObject()
 		{
-			float x = _random.Next(0, 750);
-			_gameObjects.Add(new FallingObject(_renderTarget2D, x));
+			float x = _random.Next(-10, 1080);
+			_gameObjects.Add(new Cheese(x));
 		}
 
 
 		public void PlayerControl(KeyEventArgs e)
 		{
 			if (e.KeyCode == Keys.A)
+			{
 				_player.MoveLeft();
-			if (e.KeyCode == Keys.D)
+			}
+			else if (e.KeyCode == Keys.D)
+			{
 				_player.MoveRight();
+			}
 		}
-
 
 		public void Update()
 		{
-			var fallingObjects = _gameObjects.Where(g => g is FallingObject).ToList();
+			foreach(var obj in _gameObjects)
+			{
+				obj.Update();
+			}
+
+			var fallingObjects = _gameObjects.Where(g => g is Cheese).ToList();
 
 			
 			if (fallingObjects.Any(o => o.IsCollide(_player)))
 			{
 				var objs = fallingObjects.FindAll(o => o.IsCollide(_player));
-				_player.Score++;
 				foreach (var obj in objs)
 				{
-					fallingObjects.Remove(obj);
+					_gameObjects.Remove(obj);
+					Score++;
 				}
 			}
 
-
-			foreach (FallingObject obj in fallingObjects)
-			{
-				obj.Move();
-			}
-			fallingObjects.RemoveAll(obj => obj.Y > 600); 
+			fallingObjects.RemoveAll(obj => obj.Y > 720); 
+			_gameObjects.RemoveAll(obj => obj.Y > 720); 
 			
 
-			if (fallingObjects.Count == 0 || fallingObjects[0].Y > 590) 
+			if (fallingObjects.Count == 0 || fallingObjects[0].Y > 720) 
 			{
 				SpawnObject();
 			}
@@ -133,7 +138,11 @@ namespace TheCrowAndTheFox
 			foreach (var obj in _gameObjects)
 			{
 				obj.Draw(renderTarget);
-				renderTarget.DrawBitmap(GetBitmap(renderTarget, obj.Sprite), new RectangleF(obj.X, obj.Y, obj.Width, obj.Height), 1.0f, BitmapInterpolationMode.Linear);
+				renderTarget.DrawBitmap(
+					GetBitmap(renderTarget, obj.Sprite), 
+					new RectangleF(obj.X, obj.Y, obj.Width, obj.Height), 
+					1.0f, 
+					BitmapInterpolationMode.Linear);
 				renderTarget.Transform = Matrix3x2.Identity;
 			}
 		}

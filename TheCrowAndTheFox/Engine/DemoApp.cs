@@ -297,8 +297,9 @@ namespace SharpDX.Samples
             {
                 FramePerSecond = _frameCount / _frameAccumulator;
 
-                _form.Text = _demoConfiguration.Title + " - FPS: " + FramePerSecond;
-                _frameAccumulator = 0.0f;
+                _form.Text = _demoConfiguration.Title + " - FPS: " + FramePerSecond + $" | score: ";
+
+				_frameAccumulator = 0.0f;
                 _frameCount = 0;
             }
 
@@ -306,6 +307,16 @@ namespace SharpDX.Samples
             Draw(clock);
             EndDraw();
         }
+
+        public void PrintScore(int score)
+        {
+            if(!_form.Text.EndsWith($"{score}"))
+            {
+                var l = score.ToString().Length;
+				_form.Text.Remove(_form.Text.Length - l, l);
+                _form.Text += $"{score}";
+            }
+		}
 
         protected virtual void MouseClick(MouseEventArgs e)
         {

@@ -1,37 +1,63 @@
-﻿using SharpDX.Direct2D1;
-using SharpDX;
+﻿using SharpDX;
 
 namespace TheCrowAndTheFox.Models
 {
 	public class Player : GameObject
 	{
-		public int Score { get; set; }
-		private const float speed = 10f;
+		private const float MAX_SPEED = 500f;
+		private const float ACCELERATION = 100f;
+		private const float DECELERATION = 10f;
 
-		public Player(RenderTarget renderTarget2D) : base(renderTarget2D, 0, 500, 60f, 50f)
+		private float currentSpeed = 0f; 
+
+		public Player() : base(0, 500, 60f, 50f)
 		{
 			Sprite = "fox-sprite.png";
 		}
 
-		public void MoveLeft()
+		public void MoveLeft() 
 		{
 			if (X > 0)
 			{
-				Move(-speed, 0);
+				Accelerate(-ACCELERATION);
 			}
 		}
 
 		public void MoveRight()
 		{
-			if (X < 800 - Width)
+			if (X < 1080 - Width)
 			{
-				Move(speed, 0);
+				Accelerate(ACCELERATION);
 			}
 		}
 
-		public override void Draw(RenderTarget renderTarget)
+		private void Accelerate(float change)
 		{
-			base.Draw(renderTarget);
+			currentSpeed += change;
+			currentSpeed = MathUtil.Clamp(currentSpeed, -MAX_SPEED, MAX_SPEED);
+			X += currentSpeed * Timer.DeltaTime;
 		}
+
+		public void Stop()
+		{
+			if (currentSpeed > 0)
+			{
+				currentSpeed -= DECELERATION;
+				if (currentSpeed < 0) currentSpeed = 0;
+			}
+			else if (currentSpeed < 0)
+			{
+				currentSpeed += DECELERATION;
+				if (currentSpeed > 0) currentSpeed = 0;
+			}
+			
+			X += currentSpeed * Timer.DeltaTime;
+		}
+
+		public override void Update()
+		{
+			Stop();
+		}
+
 	}
 }
