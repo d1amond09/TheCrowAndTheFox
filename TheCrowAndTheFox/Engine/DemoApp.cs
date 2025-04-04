@@ -308,16 +308,6 @@ namespace SharpDX.Samples
             EndDraw();
         }
 
-        public void PrintScore(int score)
-        {
-            if(!_form.Text.EndsWith($"{score}"))
-            {
-                var l = score.ToString().Length;
-				_form.Text.Remove(_form.Text.Length - l, l);
-                _form.Text += $"{score}";
-            }
-		}
-
         protected virtual void MouseClick(MouseEventArgs e)
         {
         }

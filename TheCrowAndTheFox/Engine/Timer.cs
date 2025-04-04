@@ -1,4 +1,4 @@
-﻿namespace TheCrowAndTheFox
+﻿namespace TheCrowAndTheFox.Engine
 {
     public static class Timer
     {
