@@ -194,6 +194,27 @@
     <Content Include="Assets\Textures\Fox\fox-jump-6.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\Textures\Fox\fox-jump-left-0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Fox\fox-jump-left-1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Fox\fox-jump-left-2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Fox\fox-jump-left-3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Fox\fox-jump-left-4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Fox\fox-jump-left-5.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Fox\fox-jump-left-6.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Textures\Fox\fox-run-0.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

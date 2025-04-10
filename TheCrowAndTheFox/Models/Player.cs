@@ -6,11 +6,15 @@ namespace TheCrowAndTheFox.Models
 {
 	public class Player : GameObject
 	{
-		private const float MAX_SPEED = 350f;
-		private const float ACCELERATION = 30f;
+		private const float MAX_SPEED = 250f;
+		private const float ACCELERATION = 25f;
 		private const float DECELERATION = 5f;
 		private const float JUMP_FORCE = 480f;
 		private const float GRAVITY = 980f; 
+
+		private const int COUNT_SPRITES_JUMP = 7; 
+		private const int COUNT_SPRITES_IDLE = 5; 
+		private const int COUNT_SPRITES_RUN = 8; 
 
 		private float _currentSpeed = 0f;
 		private float _verticalSpeed = 0f;
@@ -20,15 +24,13 @@ namespace TheCrowAndTheFox.Models
 		private bool _isMovingRight = false;
 
 		private int _numSpriteLeftRun;
-		private int _numSpriteLeftJump;
 		private int _numSpriteRightRun;
 		private int _numSpriteRightJump;
 		private int _timeLeftRun;
-		private int _timeLeftJump;
 		private int _timeRightRun;
-		private int _timeRightJump;
+		private int _timeJump;
 
-		public Player() : base(0, 500, 60f, 50f)
+		public Player() : base(0, 500, 50f, 50f)
 		{
 			Sprite = "Fox/fox-run-0.png";
 		}
@@ -106,24 +108,32 @@ namespace TheCrowAndTheFox.Models
 
 		public override void Draw(RenderTarget renderTarget)
 		{
-			if (_currentSpeed > 0 && _verticalSpeed == 0)
+			if(_verticalSpeed == 0)
 			{
-				UpdateSprite(ref _numSpriteRightRun, "Fox/fox-run-", ref _timeRightRun, 8, 8);
-			}
+				if (_currentSpeed > 0)
+				{
+					UpdateSprite(ref _numSpriteRightRun, "Fox/fox-run-", ref _timeRightRun, 8, COUNT_SPRITES_RUN);
+				}
+				else if (_currentSpeed < 0)
+				{
+					UpdateSprite(ref _numSpriteLeftRun, "Fox/fox-run-left-", ref _timeLeftRun, 8, COUNT_SPRITES_RUN);
+				}
+				else
+				{
+					UpdateSprite(ref _numSpriteRightRun, "Fox/fox-idle-", ref _timeRightRun, 8, COUNT_SPRITES_IDLE);
+				}
 
-			if (_currentSpeed < 0 && _verticalSpeed == 0)
-			{
-				UpdateSprite(ref _numSpriteLeftRun, "Fox/fox-run-left-", ref _timeLeftRun, 8, 8);
 			}
-
-			if (_currentSpeed == 0 && _verticalSpeed == 0)
+			else
 			{
-				UpdateSprite(ref _numSpriteRightRun, "Fox/fox-idle-", ref _timeRightRun, 8, 5);
-			}
-
-			if (_verticalSpeed != 0)
-			{
-				UpdateSprite(ref _numSpriteRightJump, "Fox/fox-jump-", ref _timeRightJump, 20, 7);
+				if (_currentSpeed >= 0)
+				{
+					UpdateSprite(ref _numSpriteRightJump, "Fox/fox-jump-", ref _timeJump, 20, COUNT_SPRITES_JUMP);
+				}
+				else
+				{
+					UpdateSprite(ref _numSpriteRightJump, "Fox/fox-jump-left-", ref _timeJump, 20, COUNT_SPRITES_JUMP);
+				}
 			}
 
 			base.Draw(renderTarget);
