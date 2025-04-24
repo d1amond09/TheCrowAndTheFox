@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -24,7 +25,7 @@ namespace TheCrowAndTheFox
 		protected override void Initialize(DemoConfiguration demoConfiguration)
 		{
 			base.Initialize(demoConfiguration);
-			_game = new Game(RenderTarget2D);
+			_game = new Game();
 
 			Width = demoConfiguration.Width;
 			Height = demoConfiguration.Height;
@@ -57,7 +58,7 @@ namespace TheCrowAndTheFox
 		protected override void Draw(DemoTime time)
 		{
 			_game.Render(RenderTarget2D);
-			TextLayout = new TextLayout(FactoryDWrite, $" Score: {_game.Score}", TextFormat, Width, 100);
+			TextLayout = new TextLayout(FactoryDWrite, $" Score: {Timer.Debug}", TextFormat, Width, 100);
 			
 			RenderTarget2D.DrawTextLayout(new Vector2(0, 0), TextLayout, SceneColorBrush, DrawTextOptions.None);
 			TextLayout.Dispose();

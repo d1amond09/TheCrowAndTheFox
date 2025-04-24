@@ -9,6 +9,8 @@ namespace TheCrowAndTheFox.Models
 		public float Height { get; protected set; }
 		public float X { get; protected set; }
 		public float Y { get; protected set; }
+		public float SpawnX { get; private set; }
+		public float SpawnY { get; private set; }
 
 		public GameObject(float x, float y, float size) : this(x, y, size, size) { }	
 		
@@ -16,6 +18,8 @@ namespace TheCrowAndTheFox.Models
 		{
 			X = x;
 			Y = y;
+			SpawnX = x;
+			SpawnY = y;
 			Width = width;
 			Height = height;
 		}

@@ -1,4 +1,5 @@
-﻿using SharpDX;
+﻿using System;
+using SharpDX;
 using SharpDX.Direct2D1;
 using TheCrowAndTheFox.Engine;
 
@@ -7,32 +8,37 @@ namespace TheCrowAndTheFox.Models
 	public class Player : GameObject
 	{
 		private const float MAX_SPEED = 250f;
-		private const float ACCELERATION = 25f;
-		private const float DECELERATION = 5f;
-		private const float JUMP_FORCE = 480f;
-		private const float GRAVITY = 980f; 
+		private const float ACCELERATION = 1500f;
+		private const float DECELERATION_FORCE = 1000f;
+		private const float JUMP_VELOCITY = 750f;
+		private const float GRAVITY = 2000f;
+		private const float SIZE = 50f;
+		private const float GROUND_LEVEL = 650f;
+		private const float SCREEN_WIDTH = 1080f;
 
-		private const int COUNT_SPRITES_JUMP = 7; 
-		private const int COUNT_SPRITES_IDLE = 5; 
-		private const int COUNT_SPRITES_RUN = 8; 
+		private const int COUNT_SPRITES_JUMP = 7;
+		private const int COUNT_SPRITES_IDLE = 5;
+		private const int COUNT_SPRITES_RUN = 8;
 
-		private float _currentSpeed = 0f;
+		private const float ANIM_FRAME_DURATION_RUN = 0.08f;
+		private const float ANIM_FRAME_DURATION_IDLE = 0.15f;
+		private const float ANIM_FRAME_DURATION_JUMP = 0.1f;
+
+		private float _currentHorizontalSpeed = 0f;
 		private float _verticalSpeed = 0f;
 
-		private bool _isJumping = false; 
-		private bool _isMovingLeft = false; 
+		private bool _isMovingLeft = false;
 		private bool _isMovingRight = false;
+		private bool _isGround = false;
 
-		private int _numSpriteLeftRun;
-		private int _numSpriteRightRun;
-		private int _numSpriteRightJump;
-		private int _timeLeftRun;
-		private int _timeRightRun;
-		private int _timeJump;
+		private int _currentSpriteIndex = 0;
+		private float _animationTimer = 0f;
+		private bool _facingRight = true;
 
-		public Player() : base(0, 500, 50f, 50f)
+		public Player() : base(100, GROUND_LEVEL - SIZE, SIZE, SIZE)
 		{
-			Sprite = "Fox/fox-run-0.png";
+			_isGround = true;
+			Sprite = GetSpritePath("Fox/fox-idle-", 0); 
 		}
 
 		public void MoveLeft() => _isMovingLeft = true;
@@ -43,118 +49,164 @@ namespace TheCrowAndTheFox.Models
 
 		public void Jump()
 		{
-			if (!_isJumping)
+			if (_isGround)
 			{
-				_verticalSpeed = -JUMP_FORCE; 
-				_isJumping = true;
-				_numSpriteRightJump = 0;
+				_verticalSpeed = -JUMP_VELOCITY;
+				_isGround = false;
 			}
-		}
-
-		private void ApplyGravity()
-		{
-			if (_isJumping)
-			{
-				_verticalSpeed += GRAVITY * Timer.DeltaTime; 
-				Y += _verticalSpeed * Timer.DeltaTime; 
-
-				if (Y >= 500) 
-				{
-					Y = 500; 
-					_isJumping = false; 
-					_verticalSpeed = 0; 
-				}
-			}
-		}
-
-		private void Accelerate(float change)
-		{
-			_currentSpeed += change;
-			_currentSpeed = MathUtil.Clamp(_currentSpeed, -MAX_SPEED, MAX_SPEED);
-			X += _currentSpeed * Timer.DeltaTime;
-		}
-
-		public void Stop()
-		{
-			if (_currentSpeed > 0)
-			{
-				_currentSpeed -= DECELERATION;
-				if (_currentSpeed < 0) _currentSpeed = 0;
-			}
-			else if (_currentSpeed < 0)
-			{
-				_currentSpeed += DECELERATION;
-				if (_currentSpeed > 0) _currentSpeed = 0;
-			}
-
-			X += _currentSpeed * Timer.DeltaTime;
 		}
 
 		public override void Update()
 		{
-			Stop();
-			ApplyGravity();
+			float dt = Timer.DeltaTime;
 
-			if (_isMovingLeft && X > 0)
-			{
-				Accelerate(-ACCELERATION);
-			}
-
-			if (_isMovingRight && X < 1080 - Width)
-			{
-				Accelerate(ACCELERATION);
-			}
+			HandleHorizontalMovement(dt);
+			ApplyGravity(dt);
+			UpdatePosition(dt);
+			HandleCollisions();
+			UpdateSpriteState(dt);
 		}
 
-		public override void Draw(RenderTarget renderTarget)
+		private void HandleHorizontalMovement(float dt)
 		{
-			if(_verticalSpeed == 0)
+			float targetSpeed = 0f;
+
+			if (_isMovingLeft)
 			{
-				if (_currentSpeed > 0)
+				targetSpeed = -MAX_SPEED;
+				_facingRight = false;
+			}
+			if (_isMovingRight)
+			{
+				targetSpeed = MAX_SPEED;
+				_facingRight = true;
+			}
+
+			if (targetSpeed != 0)
+			{
+				float acceleration = ACCELERATION * dt;
+				if (targetSpeed > 0)
 				{
-					UpdateSprite(ref _numSpriteRightRun, "Fox/fox-run-", ref _timeRightRun, 8, COUNT_SPRITES_RUN);
-				}
-				else if (_currentSpeed < 0)
-				{
-					UpdateSprite(ref _numSpriteLeftRun, "Fox/fox-run-left-", ref _timeLeftRun, 8, COUNT_SPRITES_RUN);
+					_currentHorizontalSpeed = Math.Min(_currentHorizontalSpeed + acceleration, MAX_SPEED);
 				}
 				else
 				{
-					UpdateSprite(ref _numSpriteRightRun, "Fox/fox-idle-", ref _timeRightRun, 8, COUNT_SPRITES_IDLE);
+					_currentHorizontalSpeed = Math.Max(_currentHorizontalSpeed - acceleration, -MAX_SPEED);
 				}
-
 			}
 			else
 			{
-				if (_currentSpeed >= 0)
+				float deceleration = DECELERATION_FORCE * dt;
+				if (_currentHorizontalSpeed > 0)
 				{
-					UpdateSprite(ref _numSpriteRightJump, "Fox/fox-jump-", ref _timeJump, 20, COUNT_SPRITES_JUMP);
+					_currentHorizontalSpeed = Math.Max(0, _currentHorizontalSpeed - deceleration);
 				}
-				else
+				else if (_currentHorizontalSpeed < 0)
 				{
-					UpdateSprite(ref _numSpriteRightJump, "Fox/fox-jump-left-", ref _timeJump, 20, COUNT_SPRITES_JUMP);
+					_currentHorizontalSpeed = Math.Min(0, _currentHorizontalSpeed + deceleration);
 				}
 			}
-
-			base.Draw(renderTarget);
 		}
 
-		private void UpdateSprite(ref int spriteNum, string prefix, ref int timeCounter, int time, int countOfSprites)
+		public void Stay()
 		{
-			if (timeCounter >= time)
-			{
-				Sprite = $"{prefix}{spriteNum % countOfSprites}.png";
-				spriteNum++;
-				timeCounter = 0;
-			}
-
-			if(spriteNum >= countOfSprites)
-			{
-				spriteNum = 0;
-			}
-
-			timeCounter++;
+			_currentHorizontalSpeed = 0f;
+			_isMovingLeft = false;
+			_isMovingRight = false;
 		}
 
+		private void ApplyGravity(float dt)
+		{
+			if (!_isGround)
+			{
+				_verticalSpeed += GRAVITY * dt;
+			}
+		}
+
+		private void UpdatePosition(float dt)
+		{
+			X += _currentHorizontalSpeed * dt;
+			Y += _verticalSpeed * dt;
+			X = MathUtil.Clamp(X, 0, SCREEN_WIDTH - Width);
+		}
+
+		private void HandleCollisions()
+		{
+			if (Y + Height >= GROUND_LEVEL && _verticalSpeed >= 0)
+			{
+				Y = GROUND_LEVEL - Height;
+				_verticalSpeed = 0;
+				_isGround = true;
+			}
+			else if (Y + Height < GROUND_LEVEL) 
+			{	
+				_isGround = false;
+			}
+		}
+
+		private void UpdateSpriteState(float dt)
+		{
+			string animPrefix;
+			int frameCount;
+			float frameDuration;
+			bool loop = true;
+			string currentStatePrefix; 
+
+			if (!_isGround)
+			{
+				currentStatePrefix = _facingRight ? "Fox/fox-jump-" : "Fox/fox-jump-left-";
+				frameCount = COUNT_SPRITES_JUMP;
+				frameDuration = ANIM_FRAME_DURATION_JUMP;
+				loop = true;
+			}
+			else if (Math.Abs(_currentHorizontalSpeed) > 0.1f)
+			{
+				currentStatePrefix = _facingRight ? "Fox/fox-run-" : "Fox/fox-run-left-";
+				frameCount = COUNT_SPRITES_RUN;
+				frameDuration = ANIM_FRAME_DURATION_RUN;
+			}
+			else
+			{
+				currentStatePrefix = _facingRight ? "Fox/fox-idle-" : "Fox/fox-idle-left-";
+				frameCount = COUNT_SPRITES_IDLE;
+				frameDuration = ANIM_FRAME_DURATION_IDLE;
+			}
+
+			animPrefix = currentStatePrefix; 
+
+			if (Sprite == null || !Sprite.StartsWith(animPrefix))
+			{
+				_currentSpriteIndex = 0;
+				_animationTimer = 0f;
+				Sprite = GetSpritePath(animPrefix, _currentSpriteIndex);
+			}
+
+
+			_animationTimer += dt;
+
+			if (_animationTimer >= frameDuration)
+			{
+				_animationTimer -= frameDuration; 
+				_currentSpriteIndex++;
+
+				if (_currentSpriteIndex >= frameCount)
+				{
+					if (loop)
+					{
+						_currentSpriteIndex = 0;
+					}
+					else
+					{
+						_currentSpriteIndex = frameCount - 1; 
+					}
+				}
+				Sprite = GetSpritePath(animPrefix, _currentSpriteIndex);
+			}
+		}
+
+		private string GetSpritePath(string prefix, int index)
+		{
+			return $"{prefix}{index}.png";
+		}
 	}
 }

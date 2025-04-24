@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using SharpDX;
 using SharpDX.Direct2D1;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using SharpDX.Samples;
 using TheCrowAndTheFox.Engine;
 using TheCrowAndTheFox.Models;
+using Rectangle = TheCrowAndTheFox.Models.Rectangle;
 
 namespace TheCrowAndTheFox
 {
@@ -21,21 +17,24 @@ namespace TheCrowAndTheFox
 
 		private Player _player;
 		private Background _background;
+		private GameObject _leftBorder;
+		private GameObject _rightBorder;
 		private List<GameObject> _gameObjects;
 		private BitmapLoader _bitmapLoader;
 		private Random _random;
 
 		private bool _isPaused;
 
-		public Game(RenderTarget renderTarget2D)
+		public Game()
 		{
 			_player = new Player();
 			_background = new Background();
+			_leftBorder = new Rectangle(_background.X, _background.Y, .1f, _background.Height);
+			_rightBorder = new Rectangle(_background.Width, _background.Y, .1f, _background.Height);
 			_gameObjects = new List<GameObject> { _background, _player };
 			_random = new Random();
 			_bitmapLoader = new BitmapLoader();
 			_isPaused = false;
-			SpawnObject();
 		}
 
 		public void Pause()
@@ -90,7 +89,18 @@ namespace TheCrowAndTheFox
 
 			var fallingObjects = _gameObjects.Where(g => g is Cheese).ToList();
 
-			
+
+			if (_leftBorder.IsCollide(_player))
+			{
+				_player.StopMoveLeft();
+				_player.Stay();
+			}
+			if (_rightBorder.IsCollide(_player))
+			{
+				_player.StopMoveRight();
+				_player.Stay();
+			}
+
 			if (fallingObjects.Any(o => o.IsCollide(_player)))
 			{
 				var objs = fallingObjects.FindAll(o => o.IsCollide(_player));
