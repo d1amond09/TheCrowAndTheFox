@@ -1,20 +1,22 @@
-﻿using System;
+﻿using TheCrowAndTheFox.Engine;
 using SharpDX;
-using SharpDX.Direct2D1;
-using TheCrowAndTheFox.Engine;
+using System;
+using TheCrowAndTheFox.Models.Consts;
+using TheCrowAndTheFox.Models.Common;
+using System.Windows.Forms;
+using System.IO;
+using TheCrowAndTheFox.Audio;
 
 namespace TheCrowAndTheFox.Models
 {
 	public class Player : GameObject
 	{
-		private const float MAX_SPEED = 250f;
+		private const float MAX_SPEED = 400f;
 		private const float ACCELERATION = 1500f;
-		private const float DECELERATION_FORCE = 1000f;
+		private const float DECELERATION = 2000f;
 		private const float JUMP_VELOCITY = 750f;
 		private const float GRAVITY = 2000f;
-		private const float SIZE = 50f;
-		private const float GROUND_LEVEL = 650f;
-		private const float SCREEN_WIDTH = 1080f;
+		private const float GROUND_LEVEL = 900f;
 
 		private const int COUNT_SPRITES_JUMP = 7;
 		private const int COUNT_SPRITES_IDLE = 5;
@@ -24,28 +26,64 @@ namespace TheCrowAndTheFox.Models
 		private const float ANIM_FRAME_DURATION_IDLE = 0.15f;
 		private const float ANIM_FRAME_DURATION_JUMP = 0.1f;
 
-		private float _currentHorizontalSpeed = 0f;
+		private IAudioManager _audioManager;
+		private readonly string _jumpSoundPath = Path.Combine(Application.StartupPath, "Assets", "Music", "player_jump.mp3");
+		private readonly string _hurtSoundPath = Path.Combine(Application.StartupPath, "Assets", "Music", "player_hurt.mp3");
+
 		private float _verticalSpeed = 0f;
 
-		private bool _isMovingLeft = false;
-		private bool _isMovingRight = false;
 		private bool _isGround = false;
 
-		private int _currentSpriteIndex = 0;
-		private float _animationTimer = 0f;
-		private bool _facingRight = true;
+		private Animation _animation;
+		public bool IsBorder => X == 0 || X == _screenWidth - Width;
+		private bool _isTryingToMoveLeft = false;
+		private bool _isTryingToMoveRight = false;
+		private Direction _facingDirection = Direction.Right;
 
-		public Player() : base(100, GROUND_LEVEL - SIZE, SIZE, SIZE)
+		public int Health { get; private set; }
+		private readonly int _screenWidth;
+
+		public Player(int screenWidth, int health, IAudioManager audioManager) 
+		: base(100, GROUND_LEVEL - GameSizes.XL, GameSizes.XL, GameSizes.XL)
 		{
+			_audioManager = audioManager;
+			Speed = MAX_SPEED;
+			_screenWidth = screenWidth;
+			Direction = Direction.None;
+			_facingDirection = Direction.Right;
+			Health = health;
 			_isGround = true;
-			Sprite = GetSpritePath("Fox/fox-idle-", 0); 
+			Sprite = PlayerSprites.Default;
+			_animation = new Animation(PlayerSprites.IdleLeft, COUNT_SPRITES_IDLE, ANIM_FRAME_DURATION_IDLE);
 		}
 
-		public void MoveLeft() => _isMovingLeft = true;
-		public void StopMoveLeft() => _isMovingLeft = false;
+		public void PlayerControlKeyDown(KeyEventArgs e)
+		{
+			switch (e.KeyCode)
+			{
+				case Keys.A: StartMoveLeft(); break;
+				case Keys.D: StartMoveRight(); break;
+				case Keys.Space: Jump(); break;
+			}
+		}
 
-		public void MoveRight() => _isMovingRight = true;
-		public void StopMoveRight() => _isMovingRight = false;
+		public void PlayerControlKeyUp(KeyEventArgs e)
+		{
+			switch (e.KeyCode)
+			{
+				case Keys.A: StopMoveLeft(); break;
+				case Keys.D: StopMoveRight(); break;
+			}
+		}
+
+		public void TakeDamage()
+		{
+			if (Health > 0) 
+			{
+				Health--;
+				_audioManager?.PlaySoundEffect(_hurtSoundPath);
+			}
+		}
 
 		public void Jump()
 		{
@@ -53,81 +91,125 @@ namespace TheCrowAndTheFox.Models
 			{
 				_verticalSpeed = -JUMP_VELOCITY;
 				_isGround = false;
+				_audioManager?.PlaySoundEffect(_jumpSoundPath);
 			}
 		}
 
-		public override void Update()
+		public void StartMoveLeft()
 		{
-			float dt = Timer.DeltaTime;
+			_isTryingToMoveLeft = true;
+			_isTryingToMoveRight = false; 
+			_facingDirection = Direction.Left;
+		}
 
-			HandleHorizontalMovement(dt);
+		public void StartMoveRight()
+		{
+			_isTryingToMoveRight = true;
+			_isTryingToMoveLeft = false; 
+			_facingDirection = Direction.Right; 
+		}
+
+		public void StopMoveLeft()
+		{
+			_isTryingToMoveLeft = false;
+		}
+
+		public void StopMoveRight()
+		{
+			_isTryingToMoveRight = false;
+		}
+
+		public override void Update(float dt)
+		{
 			ApplyGravity(dt);
-			UpdatePosition(dt);
+			base.Update(dt);
 			HandleCollisions();
-			UpdateSpriteState(dt);
+			UpdateSpriteState(dt);	
 		}
 
-		private void HandleHorizontalMovement(float dt)
+		public override void Stay()
 		{
-			float targetSpeed = 0f;
+			_isTryingToMoveLeft = false;
+			_isTryingToMoveRight = false;
+		}
 
-			if (_isMovingLeft)
+		protected override void HandleHorizontalMovement(float dt)
+		{
+			float targetSpeed = 0;
+
+			if (_isTryingToMoveRight)
 			{
-				targetSpeed = -MAX_SPEED;
-				_facingRight = false;
+				targetSpeed = Speed;
+				Direction = Direction.Right; 
+				_facingDirection = Direction.Right;
 			}
-			if (_isMovingRight)
+			else if (_isTryingToMoveLeft)
 			{
-				targetSpeed = MAX_SPEED;
-				_facingRight = true;
+				targetSpeed = -Speed;
+				Direction = Direction.Left; 
+				_facingDirection = Direction.Left;
 			}
+			else 
+			{
+				Direction = Direction.None;
+			}
+
 
 			if (targetSpeed != 0)
 			{
-				float acceleration = ACCELERATION * dt;
-				if (targetSpeed > 0)
+				if (Math.Sign(targetSpeed) != Math.Sign(CurrentSpeed) && CurrentSpeed != 0) 
 				{
-					_currentHorizontalSpeed = Math.Min(_currentHorizontalSpeed + acceleration, MAX_SPEED);
+					CurrentSpeed += Math.Sign(targetSpeed) * ACCELERATION * dt;
 				}
 				else
 				{
-					_currentHorizontalSpeed = Math.Max(_currentHorizontalSpeed - acceleration, -MAX_SPEED);
+					CurrentSpeed += Math.Sign(targetSpeed) * ACCELERATION * dt;
 				}
-			}
-			else
-			{
-				float deceleration = DECELERATION_FORCE * dt;
-				if (_currentHorizontalSpeed > 0)
-				{
-					_currentHorizontalSpeed = Math.Max(0, _currentHorizontalSpeed - deceleration);
-				}
-				else if (_currentHorizontalSpeed < 0)
-				{
-					_currentHorizontalSpeed = Math.Min(0, _currentHorizontalSpeed + deceleration);
-				}
-			}
-		}
 
-		public void Stay()
-		{
-			_currentHorizontalSpeed = 0f;
-			_isMovingLeft = false;
-			_isMovingRight = false;
+				if (targetSpeed > 0)
+					CurrentSpeed = Math.Min(CurrentSpeed, targetSpeed);
+				else
+					CurrentSpeed = Math.Max(CurrentSpeed, targetSpeed);
+			}
+			else 
+			{
+				if (Math.Abs(CurrentSpeed) > 0.01f) 
+				{
+					float decelerationAmount = DECELERATION * dt;
+					if (CurrentSpeed > 0)
+					{
+						CurrentSpeed -= decelerationAmount;
+						if (CurrentSpeed < 0) CurrentSpeed = 0;
+					}
+					else if (CurrentSpeed < 0)
+					{
+						CurrentSpeed += decelerationAmount;
+						if (CurrentSpeed > 0) CurrentSpeed = 0;
+					}
+				}
+				else
+				{
+					CurrentSpeed = 0;
+				}
+			}
+
 		}
 
 		private void ApplyGravity(float dt)
 		{
-			if (!_isGround)
+			if (!_isGround) 
 			{
 				_verticalSpeed += GRAVITY * dt;
 			}
+
 		}
 
-		private void UpdatePosition(float dt)
+		protected override void UpdatePosition(float dt)
 		{
-			X += _currentHorizontalSpeed * dt;
+			base.UpdatePosition(dt);
+			X = MathUtil.Clamp(X, 0, _screenWidth - Width);
+			
 			Y += _verticalSpeed * dt;
-			X = MathUtil.Clamp(X, 0, SCREEN_WIDTH - Width);
 		}
 
 		private void HandleCollisions()
@@ -149,64 +231,33 @@ namespace TheCrowAndTheFox.Models
 			string animPrefix;
 			int frameCount;
 			float frameDuration;
-			bool loop = true;
-			string currentStatePrefix; 
 
 			if (!_isGround)
 			{
-				currentStatePrefix = _facingRight ? "Fox/fox-jump-" : "Fox/fox-jump-left-";
+				animPrefix = (_facingDirection == Direction.Right) ? PlayerSprites.JumpRight : PlayerSprites.JumpLeft;
 				frameCount = COUNT_SPRITES_JUMP;
 				frameDuration = ANIM_FRAME_DURATION_JUMP;
-				loop = true;
 			}
-			else if (Math.Abs(_currentHorizontalSpeed) > 0.1f)
+			else if (Math.Abs(CurrentSpeed) > 0.1f)
 			{
-				currentStatePrefix = _facingRight ? "Fox/fox-run-" : "Fox/fox-run-left-";
+				animPrefix = (_facingDirection == Direction.Right) ? PlayerSprites.RunRight : PlayerSprites.RunLeft;
 				frameCount = COUNT_SPRITES_RUN;
 				frameDuration = ANIM_FRAME_DURATION_RUN;
 			}
 			else
 			{
-				currentStatePrefix = _facingRight ? "Fox/fox-idle-" : "Fox/fox-idle-left-";
+				animPrefix = (_facingDirection == Direction.Right) ? PlayerSprites.IdleRight : PlayerSprites.IdleLeft;
 				frameCount = COUNT_SPRITES_IDLE;
 				frameDuration = ANIM_FRAME_DURATION_IDLE;
 			}
 
-			animPrefix = currentStatePrefix; 
-
-			if (Sprite == null || !Sprite.StartsWith(animPrefix))
+			if (_animation.CurrentSprite == null || !_animation.CurrentSprite.StartsWith(animPrefix))
 			{
-				_currentSpriteIndex = 0;
-				_animationTimer = 0f;
-				Sprite = GetSpritePath(animPrefix, _currentSpriteIndex);
+				_animation = new Animation(animPrefix, frameCount, frameDuration);
 			}
 
-
-			_animationTimer += dt;
-
-			if (_animationTimer >= frameDuration)
-			{
-				_animationTimer -= frameDuration; 
-				_currentSpriteIndex++;
-
-				if (_currentSpriteIndex >= frameCount)
-				{
-					if (loop)
-					{
-						_currentSpriteIndex = 0;
-					}
-					else
-					{
-						_currentSpriteIndex = frameCount - 1; 
-					}
-				}
-				Sprite = GetSpritePath(animPrefix, _currentSpriteIndex);
-			}
-		}
-
-		private string GetSpritePath(string prefix, int index)
-		{
-			return $"{prefix}{index}.png";
+			_animation.Update(dt);
+			Sprite = _animation.CurrentSprite;
 		}
 	}
 }

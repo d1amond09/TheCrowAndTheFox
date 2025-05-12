@@ -33,6 +33,30 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Win32.Registry, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Win32.Registry.4.7.0\lib\net461\Microsoft.Win32.Registry.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio, Version=2.2.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.2.2.1\lib\net472\NAudio.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Asio, Version=2.2.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.Asio.2.2.1\lib\netstandard2.0\NAudio.Asio.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.Core.2.2.1\lib\netstandard2.0\NAudio.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Midi, Version=2.2.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.Midi.2.2.1\lib\netstandard2.0\NAudio.Midi.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.Wasapi, Version=2.2.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.Wasapi.2.2.1\lib\netstandard2.0\NAudio.Wasapi.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.WinForms, Version=2.2.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.WinForms.2.2.1\lib\net472\NAudio.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="NAudio.WinMM, Version=2.2.1.0, Culture=neutral, PublicKeyToken=e279aa5131008a41, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.WinMM.2.2.1\lib\netstandard2.0\NAudio.WinMM.dll</HintPath>
+    </Reference>
     <Reference Include="SharpDX, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
       <HintPath>..\packages\SharpDX.4.2.0\lib\net45\SharpDX.dll</HintPath>
     </Reference>
@@ -53,6 +77,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Security.AccessControl, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.AccessControl.4.7.0\lib\net461\System.Security.AccessControl.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Principal.Windows, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Principal.Windows.4.7.0\lib\net461\System.Security.Principal.Windows.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -64,26 +94,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\AudioManager.cs" />
     <Compile Include="Engine\BitmapLoader.cs" />
     <Compile Include="Engine\DemoApp.cs" />
     <Compile Include="Engine\DemoConfiguration.cs" />
     <Compile Include="Engine\DemoTime.cs" />
     <Compile Include="Engine\Direct2D1WinFormDemoApp.cs" />
-    <Compile Include="Game.cs" />
+    <Compile Include="HUD\Health.cs" />
+    <Compile Include="HUD\HeadsUpDisplay.cs" />
+    <Compile Include="HUD\Score.cs" />
+    <Compile Include="GameManager.cs" />
+    <Compile Include="Interfaces\IAudioManager.cs" />
+    <Compile Include="Interfaces\ICollectable.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Engine\Animation.cs" />
     <Compile Include="Models\Background.cs" />
-    <Compile Include="Models\Cheese.cs" />
+    <Compile Include="Models\Common\GameScreen.cs" />
+    <Compile Include="Models\Consts\CrowSprites.cs" />
+    <Compile Include="Models\Consts\GameSizes.cs" />
+    <Compile Include="Models\Consts\PlayerSprites.cs" />
+    <Compile Include="Models\Collectable\Bomb.cs" />
+    <Compile Include="Models\Collectable\Cheese.cs" />
+    <Compile Include="Models\Consts\SpriteNames.cs" />
+    <Compile Include="Models\Crow.cs" />
+    <Compile Include="Models\Common\Direction.cs" />
+    <Compile Include="Models\Collectable\FallingObject.cs" />
     <Compile Include="Models\GameObject.cs" />
+    <Compile Include="HUD\Heart.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Rectangle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Engine\Timer.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -96,6 +142,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="ClassDiagram.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -110,11 +157,52 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Assets\Textures\UI\" />
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Assets\Music\player_jump.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Music\collect.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Music\game-over.mp3" />
+    <Content Include="Assets\Music\game_music.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Music\menu_music.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Music\player_hurt.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\background3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\Textures\background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\background2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\background4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Collectable\bomb.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Crow\crow-fly-left-0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Crow\crow-fly-left-1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Crow\crow-fly-left-2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Crow\crow-fly-left-3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Crow\crow-fly-left-4.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\Crow\crow-fly-right-0.png">
@@ -132,45 +220,7 @@
     <Content Include="Assets\Textures\Crow\crow-fly-right-4.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Textures\Crow\Die\Down.gif" />
-    <Content Include="Assets\Textures\Crow\Die\Down.png" />
-    <Content Include="Assets\Textures\Crow\Die\Left.gif" />
-    <Content Include="Assets\Textures\Crow\Die\Left.png" />
-    <Content Include="Assets\Textures\Crow\Die\Right.gif" />
-    <Content Include="Assets\Textures\Crow\Die\Right.png" />
-    <Content Include="Assets\Textures\Crow\Die\Up.gif" />
-    <Content Include="Assets\Textures\Crow\Die\Up.png" />
-    <Content Include="Assets\Textures\Crow\Fly\Down.gif" />
-    <Content Include="Assets\Textures\Crow\Fly\Down.png" />
-    <Content Include="Assets\Textures\Crow\Fly\Left.gif" />
-    <Content Include="Assets\Textures\Crow\Fly\Left.png" />
-    <Content Include="Assets\Textures\Crow\Fly\Right.gif" />
-    <Content Include="Assets\Textures\Crow\Fly\Right.png" />
-    <Content Include="Assets\Textures\Crow\Fly\Up.gif" />
-    <Content Include="Assets\Textures\Crow\Fly\Up.png" />
-    <Content Include="Assets\Textures\Crow\Hurt\Down.gif" />
-    <Content Include="Assets\Textures\Crow\Hurt\Down.png" />
-    <Content Include="Assets\Textures\Crow\Hurt\Left.gif" />
-    <Content Include="Assets\Textures\Crow\Hurt\Left.png" />
-    <Content Include="Assets\Textures\Crow\Hurt\Right.gif" />
-    <Content Include="Assets\Textures\Crow\Hurt\Right.png" />
-    <Content Include="Assets\Textures\Crow\Hurt\Up.gif" />
-    <Content Include="Assets\Textures\Crow\Hurt\Up.png" />
-    <Content Include="Assets\Textures\Crow\Idle\Down.gif" />
-    <Content Include="Assets\Textures\Crow\Idle\Down.png" />
-    <Content Include="Assets\Textures\Crow\Idle\Left.gif" />
-    <Content Include="Assets\Textures\Crow\Idle\Left.png" />
-    <Content Include="Assets\Textures\Crow\Idle\Right.gif" />
-    <Content Include="Assets\Textures\Crow\Idle\Right.png" />
-    <Content Include="Assets\Textures\Crow\Idle\Up.gif" />
-    <Content Include="Assets\Textures\Crow\Idle\Up.png" />
-    <Content Include="Assets\Textures\fox-sprite-sheet.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\fox-sprite.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\Textures\cheese.png">
+    <Content Include="Assets\Textures\Collectable\cheese.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\Fox\fox-idle-0.png">
@@ -291,6 +341,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\Textures\Fox\fox-run-left-7.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Heart\heart-empty.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\Heart\heart-full.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\UI\main-menu2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Textures\UI\main-menu.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

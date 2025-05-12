@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TheCrowAndTheFox.Engine.Animation" Collapsed="true">
+    <Position X="2.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAQAAAAAAIAAAAAgAAAAAAAAAACAAAQCACBAAAAAAAA=</HashCode>
+      <FileName>Engine\Animation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Engine.AudioManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAECAAAAAGgAAAAAUAAgEAAAAAAAAgAEIABBA=</HashCode>
+      <FileName>Engine\AudioManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TheCrowAndTheFox.Engine.BitmapLoader" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAACAAAAAAAAAAAAAAAAAACAAAIAAAAAAAEAA=</HashCode>
+      <FileName>Engine\BitmapLoader.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="SharpDX.Samples.DemoApp" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAQANgAAAqEFgwAAAAkBAAAIQAgAAgAAIFFCgCEABAY=</HashCode>
+      <FileName>Engine\DemoApp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Samples.DemoConfiguration" Collapsed="true">
+    <Position X="2.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAABAAAAEAAAAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Engine\DemoConfiguration.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Samples.DemoTime" Collapsed="true">
+    <Position X="4.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAAAAAAAAAAAACABAAAIQAAAAAAAAA=</HashCode>
+      <FileName>Engine\DemoTime.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SharpDX.Samples.Direct2D1WinFormDemoApp" Collapsed="true">
+    <Position X="0.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAQAAAAAhAAAAIAAAAAAEAACAAAAAAAA=</HashCode>
+      <FileName>Engine\Direct2D1WinFormDemoApp.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.HUD.HeadsUpDisplay" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQACCAAACAAAggAAAAAAAAAAAAAAAAAAAAAAgAAAAQ=</HashCode>
+      <FileName>HUD\HeadsUpDisplay.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TheCrowAndTheFox.HUD.Health" Collapsed="true">
+    <Position X="4.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>HUD\Health.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.HUD.Score" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="2.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQQAAAAACAAAgAIAAAAQAAAABAAAAAAAAACAgEAAAA=</HashCode>
+      <FileName>HUD\Score.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Heart" Collapsed="true">
+    <Position X="1" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAACAAEAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HUD\Heart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Background" Collapsed="true">
+    <Position X="3.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Background.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Bomb" Collapsed="true">
+    <Position X="5.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Collectable\Bomb.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Cheese" Collapsed="true">
+    <Position X="7.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Collectable\Cheese.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.FallingObject" Collapsed="true">
+    <Position X="6.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CBQkAAAAAACAQoQCAAAAAAgAEAAQQgAAACgABAABAQA=</HashCode>
+      <FileName>Models\Collectable\FallingObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Crow" Collapsed="true">
+    <Position X="10" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABQBAAAAAAAAAAUAAAQAAIAAgEAAAAAAAAAAAIAAAEA=</HashCode>
+      <FileName>Models\Crow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.GameObject" Collapsed="true">
+    <Position X="6.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAABAAAAiAAGCEAAEABEAAAAAAYQAAAAAEAYAA=</HashCode>
+      <FileName>Models\GameObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Player" Collapsed="true">
+    <Position X="12.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CEZBCAJABgECcCCCAQAAGAAAhBAIAABQAAqRgAECgAA=</HashCode>
+      <FileName>Models\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Rectangle" Collapsed="true">
+    <Position X="2" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Rectangle.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheCrow.Models.Consts.CrowSprites" Collapsed="true">
+    <Position X="8" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAIAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Consts\CrowSprites.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Consts.GameSizes" Collapsed="true">
+    <Position X="8" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAABAAAAABAAAAAIABgAAAAAAAAAAAAAAAEgAA=</HashCode>
+      <FileName>Models\Consts\GameSizes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Consts.PlayerSprites" Collapsed="true">
+    <Position X="8" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgEAAAAAEAAAAAAAAAAAIABAAAAAAAAAAAAgAAAAQAA=</HashCode>
+      <FileName>Models\Consts\PlayerSprites.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.Models.Consts.SpriteNames" Collapsed="true">
+    <Position X="4.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAhAAAAAAAAAACAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\Consts\SpriteNames.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.GameManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwACAAABKAChAgCCUAKaEASioECAEAQAFJECADAgAE=</HashCode>
+      <FileName>GameManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="TheCrowAndTheFox.Program" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAQEABaAhl4AAAAgAAEAAAAACACAAgABAAIQAggQ=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TheCrowAndTheFox.MainForm" Collapsed="true">
+    <Position X="6.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CBjAAAACACEAipAQEACYmQAxMAaGg4JQRAEAJAIEigA=</HashCode>
+      <FileName>MainForm.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TheCrowAndTheFox.Interfaces.ICollectable" Collapsed="true">
+    <Position X="10" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\ICollectable.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="TheCrowAndTheFox.Audio.IAudioManager" Collapsed="true">
+    <Position X="11.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAUAAAAAAAAAAAAgAEIABAA=</HashCode>
+      <FileName>Interfaces\IAudioManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="TheCrowAndTheFox.Models.Common.Direction" Collapsed="true">
+    <Position X="10" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAACACAAAEAAAI=</HashCode>
+      <FileName>Models\Common\Direction.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="TheCrowAndTheFox.Models.Common.GameScreen" Collapsed="true">
+    <Position X="11.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAggAAAAAAAAAAAAAAAAAAYAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Models\Common\GameScreen.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

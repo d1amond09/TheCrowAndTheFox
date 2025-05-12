@@ -1,20 +1,17 @@
-﻿using System;
+﻿using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using SharpDX.Direct2D1;
-using SharpDX;
 using SharpDX.DXGI;
+using SharpDX;
+using System;
 
 namespace TheCrowAndTheFox.Engine
 {
-    class BitmapLoader
-    {
+    public class BitmapLoader : IDisposable
+	{
 
-		private Dictionary<string, Bitmap> _bitmaps = new Dictionary<string, Bitmap>();
+		private readonly Dictionary<string, Bitmap> _bitmaps = new Dictionary<string, Bitmap>();
 
 		public static Bitmap LoadFromFile(RenderTarget renderTarget, string file)
 		{
@@ -63,6 +60,34 @@ namespace TheCrowAndTheFox.Engine
 				_bitmaps.Add(file, bitmap);
 				return bitmap;
 			}
+		}
+
+		private bool disposed = false;
+
+		public void Dispose()
+		{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposed) return;
+
+			if (disposing)
+			{
+				foreach (var pair in _bitmaps)
+				{
+					pair.Value?.Dispose();
+				}
+				_bitmaps.Clear();
+			}
+			disposed = true;
+		}
+
+		~BitmapLoader()
+		{
+			Dispose(false);
 		}
 	}
 }

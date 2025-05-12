@@ -1,10 +1,12 @@
-﻿namespace TheCrowAndTheFox.Models
+﻿using TheCrowAndTheFox.Models.Consts;
+
+namespace TheCrowAndTheFox.Models
 {
-	class Background : GameObject
+	class Background : Rectangle
 	{
-		public Background() : base(0, 0, 1080, 720)
+		public Background(int width, int height) : base(0, 0, width, height)
 		{
-			Sprite = "background.png";
+			Sprite = SpriteNames.Background;
 		}
 	}
 }
